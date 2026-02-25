@@ -1,0 +1,81 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Admin {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String
+  name      String   @default("Admin")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Client {
+  id               Int       @id @default(autoincrement())
+  name             String
+  apiKey           String    @unique
+  secretHash       String
+  rateLimit        Int       @default(-1)
+  rateLimitEnabled Boolean   @default(false)
+  isActive         Boolean   @default(true)
+  whitelistedIps   String    @default("")
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+  lastUsedAt       DateTime?
+  
+  otpLogs      OtpLog[]
+}
+
+model OtpLog {
+  id          Int      @id @default(autoincrement())
+  clientId    Int
+  phone       String
+  otp         String
+  status      String   @default("pending")
+  ipAddress   String?
+  sessionId   String?
+  createdAt   DateTime @default(now())
+  
+  client      Client   @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  
+  @@index([clientId])
+  @@index([phone])
+  @@index([createdAt])
+}
+
+model WhatsAppSession {
+  id              Int      @id @default(autoincrement())
+  sessionId       String   @unique @default("default")
+  label           String   @default("Default")
+  phoneNumber     String?
+  isConnected     Boolean  @default(false)
+  qrCode          String?
+  lastConnectedAt DateTime?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  messages        MessageLog[]
+}
+
+model MessageLog {
+  id          Int      @id @default(autoincrement())
+  sessionId   String
+  chatId      String
+  phone       String
+  contactName String?
+  body        String
+  fromMe      Boolean  @default(false)
+  timestamp   DateTime @default(now())
+
+  session     WhatsAppSession @relation(fields: [sessionId], references: [sessionId], onDelete: Cascade)
+
+  @@index([sessionId])
+  @@index([chatId])
+  @@index([timestamp])
+}

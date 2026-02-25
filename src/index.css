@@ -1,0 +1,78 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg-main: #0a0a0a;
+  --bg-card: #141414;
+  --bg-hover: #1c1c1c;
+  --text-main: #e8e4e0;
+  --text-muted: #888;
+  --accent: #25D366;
+  --border: rgba(255, 255, 255, 0.06);
+}
+
+* {
+  font-family: 'DM Sans', sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  background: var(--bg-main);
+  color: var(--text-main);
+  margin: 0;
+}
+
+.mono {
+  font-family: 'JetBrains Mono', monospace;
+}
+
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-main);
+}
+
+::-webkit-scrollbar-thumb {
+  background: #333;
+  border-radius: 10px;
+}
+
+.glass-matte {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+}
+
+.sidebar-item-active {
+  background: rgba(255, 255, 255, 0.05);
+  color: #fff;
+  border-right: 2px solid var(--accent);
+}
+
+.chat-bubble-in {
+  background: #262626;
+  border-radius: 0 12px 12px 12px;
+}
+
+.chat-bubble-out {
+  background: #056162;
+  border-radius: 12px 0 12px 12px;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.animate-slideIn {
+  animation: slideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
